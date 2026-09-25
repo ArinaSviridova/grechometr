@@ -32,19 +32,23 @@ async function install() {
     </header>
 
     <section class="hero-card glass-card">
-      <div class="progress-copy">
-        <p class="eyebrow">{{ appStore.hellCopyCurrent.value.title }}</p>
-        <div class="progress-number">{{ Math.round(appStore.hellPercent.value) }}<small>%</small></div>
-        <strong>до ада</strong>
-        <p>{{ appStore.hellCopyCurrent.value.text }}</p>
+      <div class="hero-summary">
+        <div class="progress-copy">
+          <p class="eyebrow">{{ appStore.hellCopyCurrent.value.title }}</p>
+          <div class="progress-number">{{ Math.round(appStore.hellPercent.value) }}<small>%</small></div>
+          <strong>до ада</strong>
+          <p>{{ appStore.hellCopyCurrent.value.text }}</p>
+        </div>
+
+        <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="ring-track" cx="60" cy="60" r="50" pathLength="100" />
+          <circle class="ring-value" cx="60" cy="60" r="50" pathLength="100" :stroke-dasharray="circleProgress" />
+        </svg>
       </div>
 
-      <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
-        <circle class="ring-track" cx="60" cy="60" r="50" pathLength="100" />
-        <circle class="ring-value" cx="60" cy="60" r="50" pathLength="100" :stroke-dasharray="circleProgress" />
-      </svg>
-
-      <img class="hero-character" :class="`hero-character--${appStore.settings.avatar}`" :src="appStore.characterPath.value" alt="Персонаж Грехометра" />
+      <div class="hero-character-stage">
+        <img class="hero-character" :class="`hero-character--${appStore.settings.avatar}`" :src="appStore.characterPath.value" alt="Персонаж Грехометра" />
+      </div>
       <img v-if="appStore.currentLevel.value >= 7" class="hero-embers" src="/assets/decor/decor-embers.webp" alt="" />
     </section>
 

@@ -104,18 +104,77 @@ img { display: block; max-width: 100%; }
 .brand-title { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(36px, 11vw, 62px); line-height: .98; letter-spacing: -.045em; background: linear-gradient(105deg, #fff4bb, #f3c44c 42%, #ed6328 72%, #cf2f20); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 rgba(82, 34, 7, .7)); }
 .header-icon { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--panel); color: var(--text); font-size: 22px; cursor: pointer; backdrop-filter: blur(12px); }
 
-.hero-card { position: relative; min-height: 520px; overflow: hidden; border-radius: 32px; display: grid; place-items: center; margin-bottom: 14px; }
-.progress-copy { position: absolute; z-index: 4; top: 28px; left: 20px; max-width: 205px; text-shadow: 0 2px 18px rgba(0,0,0,.18); }
+.hero-card {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+  border-radius: 32px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  margin-bottom: 14px;
+}
+
+/* The summary owns its own vertical band. The character is rendered only below it,
+   so even very wide wings can never sit underneath the copy on narrow phones. */
+.hero-summary {
+  position: relative;
+  z-index: 4;
+  min-height: 194px;
+  padding: 26px 20px 0;
+  isolation: isolate;
+}
+.hero-summary::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 -28px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,.06), rgba(255,255,255,0));
+}
+.progress-copy {
+  position: relative;
+  z-index: 2;
+  width: min(58%, 220px);
+  min-width: 0;
+  text-shadow: 0 2px 18px rgba(0,0,0,.18);
+}
 .progress-number { font-family: Georgia, serif; font-weight: 800; font-size: clamp(58px, 18vw, 92px); line-height: .9; color: var(--accent); }
 .progress-number small { font-size: .42em; }
 .progress-copy > strong { display: block; margin-top: 4px; font-family: Georgia, serif; font-size: 21px; }
-.progress-copy > p:last-child { margin: 10px 0 0; max-width: 180px; font-size: 13px; line-height: 1.4; color: var(--muted); }
-.progress-ring { position: absolute; width: 190px; height: 190px; top: 10px; right: -42px; transform: rotate(-90deg); opacity: .84; }
+.progress-copy > p:last-child {
+  margin: 10px 0 0;
+  width: 100%;
+  max-width: 100%;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.progress-ring { position: absolute; z-index: 1; width: 190px; height: 190px; top: 8px; right: -42px; transform: rotate(-90deg); opacity: .84; }
 .progress-ring circle { fill: none; stroke-width: 7; }
 .ring-track { stroke: rgba(255,255,255,.14); }
 .ring-value { stroke: var(--accent); stroke-linecap: round; filter: drop-shadow(0 0 8px var(--accent)); transition: stroke-dasharray .5s ease; }
-.hero-character { position: absolute; z-index: 2; bottom: -10px; left: 50%; transform: translateX(-42%); width: min(82%, 430px); max-height: 440px; object-fit: contain; object-position: bottom; filter: drop-shadow(0 18px 22px rgba(0,0,0,.3)); }
-.hero-character--boy { width: min(88%, 460px); bottom: 6px; }
+.hero-character-stage {
+  position: relative;
+  z-index: 2;
+  min-height: 350px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 8px 4px;
+}
+.hero-character {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: min(78%, 390px);
+  max-height: 356px;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 18px 22px rgba(0,0,0,.3));
+}
+.hero-character--boy { width: min(82%, 420px); max-height: 360px; }
 .hero-embers { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .38; mix-blend-mode: screen; pointer-events: none; }
 
 .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
@@ -416,9 +475,12 @@ img { display: block; max-width: 100%; }
 
 @media (min-width: 700px) {
   .view { padding-left: 24px; padding-right: 24px; }
-  .hero-card { min-height: 610px; }
-  .hero-character { max-height: 530px; width: 64%; }
-  .hero-character--boy { width: 70%; }
+  .hero-card { min-height: 640px; }
+  .hero-summary { min-height: 210px; padding: 30px 26px 0; }
+  .progress-copy { width: min(48%, 260px); }
+  .hero-character-stage { min-height: 430px; }
+  .hero-character { width: min(64%, 430px); max-height: 420px; }
+  .hero-character--boy { width: min(68%, 450px); max-height: 425px; }
   .quick-stats { grid-template-columns: repeat(4, 1fr); }
   .origin-content { grid-template-columns: 1fr 1fr; }
   .intensity-grid { grid-template-columns: repeat(5, 1fr); }
@@ -427,11 +489,14 @@ img { display: block; max-width: 100%; }
 
 @media (max-width: 460px) {
   .view { padding-left: 11px; padding-right: 11px; }
-  .hero-card { min-height: 500px; border-radius: 26px; }
-  .progress-copy { left: 16px; top: 22px; }
-  .progress-ring { width: 160px; height: 160px; right: -38px; }
-  .hero-character { width: 92%; transform: translateX(-47%); }
-  .hero-character--boy { width: 98%; }
+  .hero-card { min-height: 555px; border-radius: 26px; }
+  .hero-summary { min-height: 190px; padding: 22px 16px 0; }
+  .progress-copy { width: min(58%, 176px); }
+  .progress-copy > p:last-child { font-size: 12px; line-height: 1.32; }
+  .progress-ring { width: 160px; height: 160px; right: -38px; top: 8px; }
+  .hero-character-stage { min-height: 365px; padding-bottom: 2px; }
+  .hero-character { width: min(76%, 320px); max-height: 355px; }
+  .hero-character--boy { width: min(80%, 338px); max-height: 358px; }
   .action-grid { grid-template-columns: 1fr; }
   .image-button { min-height: 94px; }
   .origin-content { grid-template-columns: 1fr; }
@@ -449,6 +514,14 @@ img { display: block; max-width: 100%; }
 
 
 @media (max-width: 360px) {
+  .hero-card { min-height: 545px; }
+  .hero-summary { min-height: 188px; padding-left: 14px; padding-right: 14px; }
+  .progress-copy { width: 54%; }
+  .progress-number { font-size: 58px; }
+  .progress-copy > strong { font-size: 19px; }
+  .progress-copy > p:last-child { font-size: 11.5px; }
+  .hero-character-stage { min-height: 357px; }
+  .hero-character { max-height: 345px; }
   .image-button__text strong { font-size: 17px; }
   .image-button__text small { font-size: 9px; white-space: normal; max-width: 150px; }
   .bottom-nav small { font-size: 7.5px; }
